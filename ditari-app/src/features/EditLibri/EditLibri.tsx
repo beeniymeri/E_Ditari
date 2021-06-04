@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState } from 'react';
-import { Button, Modal, Header, Image, Form, Segment } from 'semantic-ui-react';
+import { Button, Modal, Form, Segment } from 'semantic-ui-react';
 import { Book } from '../../app/models/book';
 
 
@@ -26,7 +26,7 @@ export default function EditBook({book: selectedBook,createOrEdit}: Props){
       createOrEdit(book);
     }
 
-    function handleInputChange(event: ChangeEvent<HTMLInputElement>){
+    function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>){
       const {name, value} = event.target;
       setBook({...book,[name]:value})
     }
@@ -42,14 +42,14 @@ export default function EditBook({book: selectedBook,createOrEdit}: Props){
       <Segment clearing>
           <Form onSubmit={handleSubmit} autoComplete='off'>
      
-            <Form.Input placeholder='Autori' value={book.autori} name='emri' onChange={handleInputChange}/>
-              <Form.Input placeholder='Titulli' value={book.title} name='mbiemri' onChange={handleInputChange}/>
-              <Form.Input placeholder='Klasa' value={book.category} name='datelindja' onChange={handleInputChange}/>
-              <Form.Input placeholder='Pershkrimi' value={book.descriptionB} name='rruga' onChange={handleInputChange}/>
+            <Form.Input placeholder='Autori' value={book.autori} name='autori' onChange={handleInputChange}/>
+              <Form.Input placeholder='Titulli' value={book.title} name='titulli' onChange={handleInputChange}/>
+              <Form.Input placeholder='Klasa' value={book.category} name='klasa' onChange={handleInputChange}/>
+              <Form.Input placeholder='Pershkrimi' value={book.descriptionB} name='pershkrimi' onChange={handleInputChange}/>
               <Button color='black' onClick={() => setOpen(false)}>
           CLOSE
         </Button>
-        <Button positive type='submit' content='Submit'/> 
+        <Button positive type='submit'  content='Submit' onClick={() => setOpen(true)}/> 
           </Form>
       </Segment>
       <Modal.Actions>

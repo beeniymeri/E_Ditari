@@ -1,5 +1,5 @@
 import { create } from 'domain';
-import React from 'react';
+import React, { SyntheticEvent, useState } from 'react';
 import { Button, Segment, Table } from 'semantic-ui-react';
 import { Book } from '../../../app/models/book';
 import EditLibri from '../../EditLibri/EditLibri';
@@ -8,10 +8,19 @@ import EditLibri from '../../EditLibri/EditLibri';
 interface Props{
     books: Book[];
     createOrEdit: (book: Book) => void;
+    deleteBook: (id: string) => void;
+    submitting: boolean;
 }
 
-export default function BookListR({books,createOrEdit}: Props){
-    return (
+export default function BookListR({books,createOrEdit,deleteBook,submitting}: Props){
+  const[target , setTarget] = useState('');
+  
+  function handleDeleteBook(e: SyntheticEvent<HTMLButtonElement>, id: string) {
+    setTarget(e.currentTarget.name)
+    deleteBook(id);
+  }
+  
+  return (
         <Table celled inverted selectable>
         <Table.Header>
           <Table.Row>
@@ -26,14 +35,19 @@ export default function BookListR({books,createOrEdit}: Props){
         </Table.Header>
     
         <Table.Body>
-        {books.map(book => (
-          <Table.Row>
+        {books.map((book) => (
+          
+          <Table.Row key={book.id}>
             <Table.Cell>{book.id}</Table.Cell>
             <Table.Cell>{book.autori}</Table.Cell>
             <Table.Cell>{book.title}</Table.Cell>
             <Table.Cell>{book.category}</Table.Cell>
             <Table.Cell>{book.descriptionB}</Table.Cell>
-            <Table.Cell><Button color='red'>DELETE</Button></Table.Cell>
+            <Table.Cell>
+              <Button name={book.id}
+              loading={submitting && target === book.id}
+              onClick={(e) => handleDeleteBook(e , book.id)} color='red'>DELETE</Button>
+            </Table.Cell>
             <Table.Cell><EditLibri book = {book} createOrEdit={createOrEdit}/></Table.Cell>
           </Table.Row>
           ))}
