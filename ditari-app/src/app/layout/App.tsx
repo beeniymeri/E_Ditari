@@ -1,15 +1,15 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import axios from 'axios';
-import { Container, Header, List } from 'semantic-ui-react';
+import { Container } from 'semantic-ui-react';
 import { Nxenesi } from '../models/nxenesi';
 import SideBar from './SideBar';
 import MesimdhenesiDashboard from '../../features/Mesimdhenesi/dashboard/MesimdhenesiDashboard';
-import NxenesitList from '../../features/Mesimdhenesi/dashboard/NxenesitList';
 import {v4 as uuid} from 'uuid';
+import { idText } from 'typescript';
+import { randomInt } from 'crypto';
 
 function App() {
   const [nxenesit, setNxenesit] = useState<Nxenesi[]>([]);
-  const [editMode,setEditMode] = useState(false);
 
   useEffect(() => {
     axios.get<Nxenesi[]>('http://localhost:5000/api/nxenesi').then(response => {
@@ -23,8 +23,15 @@ function App() {
   };
 
   function handleCreateOrEditNxenesi(nxenesi: Nxenesi){
+    // nxenesi.nxenesiID ? setNxenesit([...nxenesit.filter(x=>x.nxenesiID !== nxenesi.nxenesiID), nxenesi])
+    // : setNxenesit([...nxenesit,{...nxenesi,nxenesiID: uuid()}]);
+
     nxenesi.nxenesiID ? setNxenesit([...nxenesit.filter(x=>x.nxenesiID !== nxenesi.nxenesiID), nxenesi])
-    : setNxenesit([...nxenesit,{...nxenesi,nxenesiID: uuid()}]);
+    : setNxenesit([...nxenesit,{...nxenesi,nxenesiID: '10'}]);
+  }
+
+  function handleDeleteNxenesi(id: string){
+    setNxenesit([...nxenesit.filter(x=>x.nxenesiID !== id)]);
   }
 
   return (
@@ -32,7 +39,7 @@ function App() {
    <Fragment>
      <SideBar/>
      <Container style={myStyle}>
-       <MesimdhenesiDashboard nxenesit={nxenesit} createOrEdit={handleCreateOrEditNxenesi}/>
+       <MesimdhenesiDashboard nxenesit={nxenesit} createOrEdit={handleCreateOrEditNxenesi} deleteNxenesi={handleDeleteNxenesi}/>
       </Container>
   </Fragment>
   );

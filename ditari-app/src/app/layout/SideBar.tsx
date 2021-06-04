@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { Header, Icon, Image, Menu, Segment, Sidebar, Container } from 'semantic-ui-react'
+import React from 'react'
+import { Menu,Container } from 'semantic-ui-react'
 
 export default function SideBar(){
     return (

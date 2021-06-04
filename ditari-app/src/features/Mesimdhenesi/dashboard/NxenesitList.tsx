@@ -1,15 +1,16 @@
-import { create } from 'domain';
 import React from 'react';
-import { Button, Segment, Table } from 'semantic-ui-react';
+import { Button, Table } from 'semantic-ui-react';
 import { Nxenesi } from '../../../app/models/nxenesi';
+import AddNxenesi from '../AddNxenesi/AddNxenesi';
 import EditNxenesi from '../EditNxenesi/EditNxenesi';
 
 interface Props{
     nxenesit: Nxenesi[];
     createOrEdit: (nxenesi: Nxenesi) => void;
+    deleteNxenesi: (id: string) => void;
 }
 
-export default function NxenesitList({nxenesit,createOrEdit}: Props){
+export default function NxenesitList({nxenesit,createOrEdit, deleteNxenesi}: Props){
     return (
         <Table celled inverted selectable>
         <Table.Header>
@@ -26,7 +27,7 @@ export default function NxenesitList({nxenesit,createOrEdit}: Props){
             <Table.HeaderCell></Table.HeaderCell>
           </Table.Row>
         </Table.Header>
-    
+          
         <Table.Body>
         {nxenesit.map(nxenesi => (
           <Table.Row>
@@ -38,12 +39,14 @@ export default function NxenesitList({nxenesit,createOrEdit}: Props){
             <Table.Cell>{nxenesi.qyteti}</Table.Cell>
             <Table.Cell>{nxenesi.numriKontaktues}</Table.Cell>
             <Table.Cell>{nxenesi.nrLiberAme}</Table.Cell>
-            <Table.Cell><Button color='red'>DELETE</Button></Table.Cell>
+            <Table.Cell><Button color='red' onClick={() => deleteNxenesi(nxenesi.nxenesiID)}>DELETE</Button></Table.Cell>
             <Table.Cell><EditNxenesi nxenesi = {nxenesi} createOrEdit={createOrEdit}/></Table.Cell>
           </Table.Row>
           ))}
-          
         </Table.Body>
+        
+       
+        
         
       </Table>
     )

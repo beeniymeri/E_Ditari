@@ -1,37 +1,69 @@
-import React from 'react';
-import { Button, Modal, Header, Image, Segment, Form } from 'semantic-ui-react';
+import React, { ChangeEvent, useState } from 'react';
+import { Button, Modal, Form, Segment } from 'semantic-ui-react';
+import { Nxenesi } from '../../../app/models/nxenesi';
+
+interface Props{
+  nxenesi: Nxenesi | undefined;
+  createOrEdit: (nxenesi: Nxenesi) => void
+}
 
 
-export default function AddNxenesi(){
-    const [open, setOpen] = React.useState(false);
+export default function AddNxenesi({nxenesi: selectedNxenesi,createOrEdit}: Props){
+    const[open, setOpen] = React.useState(false);
+    
+    const initialState = selectedNxenesi ?? {
+      nxenesiID: '',
+      emri: '',
+      mbiemri: '',
+      datelindja: '',
+      rruga: '',
+      qyteti: '',
+      numriKontaktues: '',
+      nrLiberAme: '',
+      photo: '',
+      email: '',
+      prindi: '',
+      klasaID: ''
+    }
+
+    const [nxenesi, setNxenesi] = useState(initialState);
+
+    function handleSubmit(){
+      createOrEdit(nxenesi);
+      setOpen(false)
+    }
+
+    function handleInputChange(event: ChangeEvent<HTMLInputElement>){
+      const {name, value} = event.target;
+      setNxenesi({...nxenesi,[name]:value})
+    }
 
   return (
     <Modal
       onClose={() => setOpen(false)}
       onOpen={() => setOpen(true)}
       open={open}
-      trigger={<Button color='blue'>SHTO NXENESIN</Button>}
+      trigger={<Button color='blue'>ADD</Button>}
     >
-      <Modal.Header>SHTO NJE NXENES</Modal.Header>
+    <Modal.Header>SHTO NXENESIN</Modal.Header>
       <Segment clearing>
-          <Form>
-              <Form.Input placeholder='Emri'/>
-              <Form.Input placeholder='Mbiemri'/>
-              <Form.Input placeholder='Datelindja'/>
-              <Form.Input placeholder='Adresa'/>
-              <Form.Input placeholder='Qyteti'/>
-              <Form.Input placeholder='Numri kontaktues'/>
-              <Form.Input placeholder='Nr. ne liber ame'/>
-          </Form>
-      </Segment>
-      
-      
-      
-      <Modal.Actions>
-        <Button color='black' onClick={() => setOpen(false)}>
+          <Form onSubmit={handleSubmit} autoComplete='off'>
+     
+              <Form.Input placeholder='Emri' value={nxenesi.emri} name='emri' onChange={handleInputChange}/>
+              <Form.Input placeholder='Mbiemri' value={nxenesi.mbiemri} name='mbiemri' onChange={handleInputChange}/>
+              <Form.Input placeholder='Datelindja' value={nxenesi.datelindja} name='datelindja' onChange={handleInputChange}/>
+              <Form.Input placeholder='Rruga' value={nxenesi.rruga} name='rruga' onChange={handleInputChange}/>
+              <Form.Input placeholder='Qyteti' value={nxenesi.qyteti} name='qyteti' onChange={handleInputChange}/>
+              <Form.Input placeholder='Numri kontaktues' value={nxenesi.numriKontaktues} name='numriKontaktues' onChange={handleInputChange}/>
+              <Form.Input placeholder='Nr. ne liber ame' value={nxenesi.nrLiberAme} name='nrLiberAme' onChange={handleInputChange}/>
+              <Button color='black' onClick={() => setOpen(false)}>
           CLOSE
         </Button>
-        <Button color='green'>SHTO NXENESIN</Button>
+        <Button positive type='submit' content='ADD'/> 
+          </Form>
+      </Segment>
+      <Modal.Actions>
+        
       </Modal.Actions>
     </Modal>
   )

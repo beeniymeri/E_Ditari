@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState } from 'react';
-import { Button, Modal, Header, Image, Form, Segment } from 'semantic-ui-react';
+import { Button, Modal, Form, Segment } from 'semantic-ui-react';
 import { Nxenesi } from '../../../app/models/nxenesi';
 
 interface Props{
@@ -30,6 +30,7 @@ export default function EditNxenesi({nxenesi: selectedNxenesi,createOrEdit}: Pro
 
     function handleSubmit(){
       createOrEdit(nxenesi);
+      setOpen(false)
     }
 
     function handleInputChange(event: ChangeEvent<HTMLInputElement>){
