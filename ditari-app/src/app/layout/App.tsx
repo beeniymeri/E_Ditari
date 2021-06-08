@@ -1,41 +1,38 @@
-import React, { Fragment, useEffect, useState } from 'react';
-import axios from 'axios';
-import { Container, Header, List } from 'semantic-ui-react';
-import { Nxenesi } from '../models/nxenesi';
+
+import { Container } from 'semantic-ui-react';
 import SideBar from './SideBar';
-import MesimdhenesiDashboard from '../../features/Mesimdhenesi/dashboard/MesimdhenesiDashboard';
-import NxenesitList from '../../features/Mesimdhenesi/dashboard/NxenesitList';
-import {v4 as uuid} from 'uuid';
+import BookDashboard from '../../features/Books/dashboard/BookDashboard';
+
+import { observer } from 'mobx-react-lite';
+import { Route } from 'react-router';
+import Orari from '../../features/Orari/Orari';
+
+
 
 function App() {
-  const [nxenesit, setNxenesit] = useState<Nxenesi[]>([]);
-  const [editMode,setEditMode] = useState(false);
 
-  useEffect(() => {
-    axios.get<Nxenesi[]>('http://localhost:5000/api/nxenesi').then(response => {
-      setNxenesit(response.data);
-    })
-  }, [])
-
-  const myStyle= {
+  const myStyle = {
     marginLeft: "7em",
-    marginTop:"2em"
+    marginTop: "2em"
   };
 
-  function handleCreateOrEditNxenesi(nxenesi: Nxenesi){
-    nxenesi.nxenesiID ? setNxenesit([...nxenesit.filter(x=>x.nxenesiID !== nxenesi.nxenesiID), nxenesi])
-    : setNxenesit([...nxenesit,{...nxenesi,nxenesiID: uuid()}]);
-  }
-
   return (
-   
-   <Fragment>
-     <SideBar/>
-     <Container style={myStyle}>
-       <MesimdhenesiDashboard nxenesit={nxenesit} createOrEdit={handleCreateOrEditNxenesi}/>
-      </Container>
-  </Fragment>
+    <>
+      <Route exact path='/' component={Orari} />
+      <Route
+        path={'/(.+)'}
+        render={() => (
+          <>
+            <SideBar />
+            <Container style={myStyle}>
+              <Route path='/books' component={BookDashboard} />
+            </Container>
+          </>
+        )}
+      />
+    </>
   );
 }
 
-export default App;
+export default observer(App);
+

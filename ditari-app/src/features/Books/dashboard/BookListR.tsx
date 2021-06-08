@@ -1,19 +1,15 @@
-import { create } from 'domain';
+import { observer } from 'mobx-react-lite';
+import { loadavg } from 'os';
 import React, { SyntheticEvent, useState } from 'react';
 import { Button, Segment, Table } from 'semantic-ui-react';
-import { Book } from '../../../app/models/book';
-import EditLibri from '../../EditLibri/EditLibri';
+import { useStore } from '../../../app/stores/store';
+import EditLibri from '../EditLibri/EditLibri';
 
-
-interface Props{
-    books: Book[];
-    createOrEdit: (book: Book) => void;
-    deleteBook: (id: string) => void;
-    submitting: boolean;
-}
-
-export default function BookListR({books,createOrEdit,deleteBook,submitting}: Props){
+export default observer(function BookListR(){
   const[target , setTarget] = useState('');
+
+  const{mesimdhenesiStore} = useStore();
+  const{deleteBook, loading} = mesimdhenesiStore;
   
   function handleDeleteBook(e: SyntheticEvent<HTMLButtonElement>, id: string) {
     setTarget(e.currentTarget.name)
@@ -35,7 +31,7 @@ export default function BookListR({books,createOrEdit,deleteBook,submitting}: Pr
         </Table.Header>
     
         <Table.Body>
-        {books.map((book) => (
+        {mesimdhenesiStore.books.map((book) => (
           
           <Table.Row key={book.id}>
             <Table.Cell>{book.id}</Table.Cell>
@@ -45,10 +41,10 @@ export default function BookListR({books,createOrEdit,deleteBook,submitting}: Pr
             <Table.Cell>{book.descriptionB}</Table.Cell>
             <Table.Cell>
               <Button name={book.id}
-              loading={submitting && target === book.id}
-              onClick={(e) => handleDeleteBook(e , book.id)} color='red'>DELETE</Button>
+              loading={loading && target === book.id}
+              onClick={(e) => handleDeleteBook(e , book.id!)} color='red'>DELETE</Button>
             </Table.Cell>
-            <Table.Cell><EditLibri book = {book} createOrEdit={createOrEdit}/></Table.Cell>
+            <Table.Cell><EditLibri book = {book}/></Table.Cell>
           </Table.Row>
           ))}
           
@@ -57,4 +53,4 @@ export default function BookListR({books,createOrEdit,deleteBook,submitting}: Pr
       </Table>
     )
 
-}
+})

@@ -10,5 +10,6 @@ namespace Persistence
         }
 
         public DbSet<Nxenesi> Nxenesi { get; set; }
+         public DbSet<Book> Book { get; set;}
     }
 }

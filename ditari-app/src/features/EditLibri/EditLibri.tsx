@@ -1,17 +1,19 @@
 import React, { ChangeEvent, useState } from 'react';
 import { Button, Modal, Form, Segment } from 'semantic-ui-react';
-import { Book } from '../../app/models/book';
+import { Book } from '../../../app/models/book';
+import { useStore } from '../../../app/stores/store';
 
 
 interface Props{
   book: Book | undefined;
-  createOrEdit: (book: Book) => void
 }
 
 
-export default function EditBook({book: selectedBook,createOrEdit}: Props){
+export default function EditBook({book: selectedBook}: Props){
     const[open, setOpen] = React.useState(false);
-    
+    const{mesimdhenesiStore} = useStore();
+    const{updateBook} = mesimdhenesiStore;
+
     const initialState = selectedBook ?? {
       id: '',
       autori: '',
@@ -23,7 +25,9 @@ export default function EditBook({book: selectedBook,createOrEdit}: Props){
     const [book, setBook] = useState(initialState);
 
     function handleSubmit(){
-      createOrEdit(book);
+      updateBook(book);
+      setOpen(false);
+      alert('Successfully edited!');
     }
 
     function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>){
@@ -43,9 +47,9 @@ export default function EditBook({book: selectedBook,createOrEdit}: Props){
           <Form onSubmit={handleSubmit} autoComplete='off'>
      
             <Form.Input placeholder='Autori' value={book.autori} name='autori' onChange={handleInputChange}/>
-              <Form.Input placeholder='Titulli' value={book.title} name='titulli' onChange={handleInputChange}/>
-              <Form.Input placeholder='Klasa' value={book.category} name='klasa' onChange={handleInputChange}/>
-              <Form.Input placeholder='Pershkrimi' value={book.descriptionB} name='pershkrimi' onChange={handleInputChange}/>
+              <Form.Input placeholder='Titulli' value={book.title} name='title' onChange={handleInputChange}/>
+              <Form.Input placeholder='Klasa' value={book.category} name='category' onChange={handleInputChange}/>
+              <Form.Input placeholder='Pershkrimi' value={book.descriptionB} name='descriptionB' onChange={handleInputChange}/>
               <Button color='black' onClick={() => setOpen(false)}>
           CLOSE
         </Button>

@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
-import { Header, Icon, Image, Menu, Segment, Sidebar, Container } from 'semantic-ui-react'
+import { NavLink } from 'react-router-dom'
+import {  Container, Menu } from 'semantic-ui-react'
 
 export default function SideBar(){
     return (
         <Menu inverted pointing vertical>
         <Container>
-        <Menu.Item header>
+        <Menu.Item exact as={NavLink} to='/' header >
            <img src="/assets/avatar.png" alt="avatar" style={{marginBottom: '10px'}}/>
+           MESIMDHENESI PANEL
          </Menu.Item>
        <Menu.Item
          name='Dashboard'
@@ -14,16 +16,16 @@ export default function SideBar(){
        <Menu.Item
          name='Lista e nxenesve'
        />
-       <Menu.Item
-         name='Orari'
+       <Menu.Item as={NavLink} to='/orari'
+         name='Orari' 
        />
        <Menu.Item
          name='Vendos notat'
        />
-       <Menu.Item
+       <Menu.Item as={NavLink} to='/books'
          name='Ngarko material'
        />
-       <Menu.Item
+       <Menu.Item 
          name='Profili im'
        />
      </Container>
