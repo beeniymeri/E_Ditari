@@ -1,17 +1,19 @@
 import React, { ChangeEvent, useState } from 'react';
-import { Button, Modal, Header, Image, Form, Segment } from 'semantic-ui-react';
-import { Book } from '../../app/models/book';
+import { Button, Modal, Form, Segment } from 'semantic-ui-react';
+import { Book } from '../../../app/models/book';
+import { useStore } from '../../../app/stores/store';
 
 
 interface Props{
   book: Book | undefined;
-  createOrEdit: (book: Book) => void
 }
 
 
-export default function EditBook({book: selectedBook,createOrEdit}: Props){
+export default function EditBook({book: selectedBook}: Props){
     const[open, setOpen] = React.useState(false);
-    
+    const{mesimdhenesiStore} = useStore();
+    const{updateBook} = mesimdhenesiStore;
+
     const initialState = selectedBook ?? {
       id: '',
       autori: '',
@@ -23,10 +25,12 @@ export default function EditBook({book: selectedBook,createOrEdit}: Props){
     const [book, setBook] = useState(initialState);
 
     function handleSubmit(){
-      createOrEdit(book);
+      updateBook(book);
+      setOpen(false);
+      alert('Successfully edited!');
     }
 
-    function handleInputChange(event: ChangeEvent<HTMLInputElement>){
+    function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>){
       const {name, value} = event.target;
       setBook({...book,[name]:value})
     }
@@ -42,14 +46,14 @@ export default function EditBook({book: selectedBook,createOrEdit}: Props){
       <Segment clearing>
           <Form onSubmit={handleSubmit} autoComplete='off'>
      
-            <Form.Input placeholder='Autori' value={book.autori} name='emri' onChange={handleInputChange}/>
-              <Form.Input placeholder='Titulli' value={book.title} name='mbiemri' onChange={handleInputChange}/>
-              <Form.Input placeholder='Klasa' value={book.category} name='datelindja' onChange={handleInputChange}/>
-              <Form.Input placeholder='Pershkrimi' value={book.descriptionB} name='rruga' onChange={handleInputChange}/>
+            <Form.Input placeholder='Autori' value={book.autori} name='autori' onChange={handleInputChange}/>
+              <Form.Input placeholder='Titulli' value={book.title} name='title' onChange={handleInputChange}/>
+              <Form.Input placeholder='Klasa' value={book.category} name='category' onChange={handleInputChange}/>
+              <Form.Input placeholder='Pershkrimi' value={book.descriptionB} name='descriptionB' onChange={handleInputChange}/>
               <Button color='black' onClick={() => setOpen(false)}>
           CLOSE
         </Button>
-        <Button positive type='submit' content='Submit'/> 
+        <Button positive type='submit'  content='Submit' onClick={() => setOpen(true)}/> 
           </Form>
       </Segment>
       <Modal.Actions>
