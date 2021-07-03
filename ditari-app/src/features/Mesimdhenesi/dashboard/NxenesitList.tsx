@@ -1,16 +1,26 @@
-import React from 'react';
+import { observer } from 'mobx-react-lite';
+import React, { SyntheticEvent, useState } from 'react';
 import { Button, Table } from 'semantic-ui-react';
-import { Nxenesi } from '../../../app/models/nxenesi';
-import AddNxenesi from '../AddNxenesi/AddNxenesi';
+import LoadingComponent from '../../../app/layout/LoadingComponent';
+import { useStore } from '../../../app/stores/store';
 import EditNxenesi from '../EditNxenesi/EditNxenesi';
 
-interface Props{
-    nxenesit: Nxenesi[];
-    createOrEdit: (nxenesi: Nxenesi) => void;
-    deleteNxenesi: (id: string) => void;
-}
+export default observer(function NxenesitList(){
+    const [target,setTarget] = useState('');
 
-export default function NxenesitList({nxenesit,createOrEdit, deleteNxenesi}: Props){
+    const {mesimdhenesiStore} = useStore();
+    const {updateNxenesi, loading, deleteNxenesi} = mesimdhenesiStore;
+
+    function handleActivityDelete(e: SyntheticEvent<HTMLButtonElement>, id: string){
+      setTarget(e.currentTarget.name);
+      deleteNxenesi(id);
+      alert('Successfully deleted!');
+    }
+
+    function datess(x: string){
+      return x.substring(0,10);
+    }
+  
     return (
         <Table celled inverted selectable>
         <Table.Header>
@@ -29,18 +39,18 @@ export default function NxenesitList({nxenesit,createOrEdit, deleteNxenesi}: Pro
         </Table.Header>
           
         <Table.Body>
-        {nxenesit.map(nxenesi => (
+        {mesimdhenesiStore.nxenesit.map(nxenesi => (
           <Table.Row>
             <Table.Cell>{nxenesi.nxenesiID}</Table.Cell>
             <Table.Cell>{nxenesi.emri}</Table.Cell>
             <Table.Cell>{nxenesi.mbiemri}</Table.Cell>
-            <Table.Cell>{nxenesi.datelindja}</Table.Cell>
+            <Table.Cell>{datess(nxenesi.datelindja)}</Table.Cell>
             <Table.Cell>{nxenesi.rruga}</Table.Cell>
             <Table.Cell>{nxenesi.qyteti}</Table.Cell>
             <Table.Cell>{nxenesi.numriKontaktues}</Table.Cell>
             <Table.Cell>{nxenesi.nrLiberAme}</Table.Cell>
-            <Table.Cell><Button color='red' onClick={() => deleteNxenesi(nxenesi.nxenesiID)}>DELETE</Button></Table.Cell>
-            <Table.Cell><EditNxenesi nxenesi = {nxenesi} createOrEdit={createOrEdit}/></Table.Cell>
+            <Table.Cell><Button name={nxenesi.nxenesiID} loading={loading && target === nxenesi.nxenesiID} color='red' onClick={(e) => handleActivityDelete(e, nxenesi.nxenesiID!)}>DELETE</Button></Table.Cell>
+            <Table.Cell><EditNxenesi nxenesi = {nxenesi}/></Table.Cell>
           </Table.Row>
           ))}
         </Table.Body>
@@ -51,4 +61,4 @@ export default function NxenesitList({nxenesit,createOrEdit, deleteNxenesi}: Pro
       </Table>
     )
 
-}
+})
