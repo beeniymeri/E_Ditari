@@ -1,26 +1,16 @@
-import { Formik } from 'formik';
-import { observer } from 'mobx-react-lite';
 import React, { ChangeEvent, useState } from 'react';
-import { useHistory } from 'react-router';
-import { Button, Modal, Form, Segment, Header } from 'semantic-ui-react';
+import { Button, Modal, Header, Image, Form, Segment } from 'semantic-ui-react';
 import { Nxenesi } from '../../../app/models/nxenesi';
-import { useStore } from '../../../app/stores/store';
-import * as Yup from 'yup';
-import MyTextInput from '../../../app/common/form/MyTextInput';
-
 
 interface Props{
   nxenesi: Nxenesi | undefined;
+  createOrEdit: (nxenesi: Nxenesi) => void
 }
 
 
-export default observer(function EditNxenesi({nxenesi: selectedNxenesi }: Props){
+export default function EditNxenesi({nxenesi: selectedNxenesi,createOrEdit}: Props){
     const[open, setOpen] = React.useState(false);
-    const history = useHistory();
-    const {mesimdhenesiStore} = useStore();
-
-    const {updateNxenesi, loading} = mesimdhenesiStore;
-
+    
     const initialState = selectedNxenesi ?? {
       nxenesiID: '',
       emri: '',
@@ -32,29 +22,19 @@ export default observer(function EditNxenesi({nxenesi: selectedNxenesi }: Props)
       nrLiberAme: '',
       photo: '',
       email: '',
-      prindi: 1,
-      klasaID: 1
+      prindi: '',
+      klasaID: ''
     }
-
-    const validationSchema = Yup.object({
-      emri: Yup.string().required('Emri nuk duhet te jete i zbraset'),
-      mbiemri: Yup.string().required('Mbiemri nuk duhet te jete i zbraset'),
-      datelindja: Yup.string().required('Datelindja nuk duhet te jete e zbraset'),
-      rruga: Yup.string().required('Rruga nuk duhet te jete e zbraset'),
-      qyteti: Yup.string().required('Qyteti nuk duhet te jete i zbraset'),
-      numriKontaktues: Yup.string().required('Numri kontaktues nuk duhet te jete i zbraset'),
-      nrLiberAme: Yup.string().required('Numri i librit ame nuk duhet te jete i zbraset')
-    })
-
 
     const [nxenesi, setNxenesi] = useState(initialState);
 
-    function handleFormSubmit(nxenesi: Nxenesi){
-      updateNxenesi(nxenesi).then(() => history.push(`/`)).then(() => history.push(`/nxenesit`));;
+    function handleSubmit(){
+      createOrEdit(nxenesi);
     }
 
-    function datess(x: string){
-      return x.substring(0,10);
+    function handleInputChange(event: ChangeEvent<HTMLInputElement>){
+      const {name, value} = event.target;
+      setNxenesi({...nxenesi,[name]:value})
     }
 
   return (
@@ -65,37 +45,25 @@ export default observer(function EditNxenesi({nxenesi: selectedNxenesi }: Props)
       trigger={<Button color='orange'>EDIT</Button>}
     >
     <Modal.Header>EDIT STUDENT</Modal.Header>
-    <Segment clearing>
-        <Header content='Nxenesi Details' sub color='teal'/>
-        <Formik validationSchema={validationSchema} initialValues={nxenesi} onSubmit={values => handleFormSubmit(values)}>
-          {({handleSubmit, isValid, isSubmitting, dirty}) => (
-               <Form className='ui form' onSubmit={handleSubmit} autoComplete='off'>
-              
-               <MyTextInput name='emri' placeholder='emri' />
-           
-               <MyTextInput placeholder='Mbiemri' name='mbiemri' />
-             
-               <MyTextInput type='date' placeholder='Datelindja' value={datess(nxenesi.datelindja)} name='datelindja'/>
-               
-               <MyTextInput placeholder='Rruga' name='rruga'/>
-               
-               <MyTextInput placeholder='Qyteti' name='qyteti'/>
-               
-               <MyTextInput placeholder='Numri kontaktues' name='numriKontaktues'/>
-               
-               <MyTextInput placeholder='Nr. ne liber ame' name='nrLiberAme'/>
-              
-               <Button color='black' onClick={() => setOpen(false)}>MBYLL</Button>
-              <Button disabled={isSubmitting || !dirty || !isValid} loading={loading} positive type='submit' content='NDRYSHO'/> 
-           </Form>
-
-          )}
-        </Formik>
-         
+      <Segment clearing>
+          <Form onSubmit={handleSubmit} autoComplete='off'>
+     
+              <Form.Input placeholder='Emri' value={nxenesi.emri} name='emri' onChange={handleInputChange}/>
+              <Form.Input placeholder='Mbiemri' value={nxenesi.mbiemri} name='mbiemri' onChange={handleInputChange}/>
+              <Form.Input placeholder='Datelindja' value={nxenesi.datelindja} name='datelindja' onChange={handleInputChange}/>
+              <Form.Input placeholder='Rruga' value={nxenesi.rruga} name='rruga' onChange={handleInputChange}/>
+              <Form.Input placeholder='Qyteti' value={nxenesi.qyteti} name='qyteti' onChange={handleInputChange}/>
+              <Form.Input placeholder='Numri kontaktues' value={nxenesi.numriKontaktues} name='numriKontaktues' onChange={handleInputChange}/>
+              <Form.Input placeholder='Nr. ne liber ame' value={nxenesi.nrLiberAme} name='nrLiberAme' onChange={handleInputChange}/>
+              <Button color='black' onClick={() => setOpen(false)}>
+          CLOSE
+        </Button>
+        <Button positive type='submit' content='Submit'/> 
+          </Form>
       </Segment>
       <Modal.Actions>
         
       </Modal.Actions>
     </Modal>
   )
-})
+}

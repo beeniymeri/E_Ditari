@@ -1,14 +1,14 @@
 export interface Nxenesi {
-    nxenesiID?: string;
+    nxenesiID: string;
     emri: string;
     mbiemri: string;
     datelindja: string;
-    photo?: string;
+    photo: string;
     rruga: string;
     qyteti: string;
     numriKontaktues: string;
-    email?: string;
+    email: string;
     nrLiberAme: string;
-    prindi?: number;
-    klasaID?: number;
+    prindi: string;
+    klasaID: string;
 }
