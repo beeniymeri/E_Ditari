@@ -1,12 +1,12 @@
 import React, { ChangeEvent, useState } from 'react';
+import { useHistory } from 'react-router';
 import { Button, Modal, Form, Segment } from 'semantic-ui-react';
-import { useStore } from '../../app/stores/store';
-
-
+import { Book } from '../../../app/models/book';
+import { useStore } from '../../../app/stores/store';
 
 export default function AddLibri(){
     const[open, setOpen] = React.useState(false);
-    
+    const history = useHistory();
     const[selectedBook] = useState();
 
     const{mesimdhenesiStore} = useStore();
@@ -22,9 +22,7 @@ export default function AddLibri(){
     const [book, setBook] = useState(initialState);
 
     function handleSubmit(){
-      createBook(book);
-      setOpen(false);
-      alert('Successfully created!');
+      createBook(book).then(() => history.push(`/`)).then(() => history.push(`/literatura`));
     }
 
     function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>){
@@ -50,7 +48,7 @@ export default function AddLibri(){
               <Button color='black' onClick={() => setOpen(false)}>
           CLOSE
         </Button>
-        <Button positive type='submit'  content='Submit' onClick={() => setOpen(true)}/> 
+        <Button loading={loading} positive type='submit'  content='SHTO' /> 
           </Form>
       </Segment>
       <Modal.Actions>

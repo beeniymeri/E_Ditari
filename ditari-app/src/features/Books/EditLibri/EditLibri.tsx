@@ -1,4 +1,6 @@
+import { observer } from 'mobx-react-lite';
 import React, { ChangeEvent, useState } from 'react';
+import { useHistory } from 'react-router';
 import { Button, Modal, Form, Segment } from 'semantic-ui-react';
 import { Book } from '../../../app/models/book';
 import { useStore } from '../../../app/stores/store';
@@ -8,26 +10,24 @@ interface Props{
   book: Book | undefined;
 }
 
-
-export default function EditBook({book: selectedBook}: Props){
+export default observer(function EditBook({book: selectedBook}: Props){
     const[open, setOpen] = React.useState(false);
     const{mesimdhenesiStore} = useStore();
-    const{updateBook} = mesimdhenesiStore;
+    const{updateBook,loading} = mesimdhenesiStore;
+    const history = useHistory();
 
     const initialState = selectedBook ?? {
       id: '',
       autori: '',
       title: '',
       category: '',
-      descriptionB: '',
+      descriptionB: ''
     }
 
     const [book, setBook] = useState(initialState);
 
     function handleSubmit(){
-      updateBook(book);
-      setOpen(false);
-      alert('Successfully edited!');
+      updateBook(book).then(() => history.push(`/`)).then(() => history.push(`/literatura`));
     }
 
     function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>){
@@ -53,7 +53,7 @@ export default function EditBook({book: selectedBook}: Props){
               <Button color='black' onClick={() => setOpen(false)}>
           CLOSE
         </Button>
-        <Button positive type='submit'  content='Submit' onClick={() => setOpen(true)}/> 
+        <Button loading={loading} positive type='submit' content='Submit' /> 
           </Form>
       </Segment>
       <Modal.Actions>
@@ -61,4 +61,4 @@ export default function EditBook({book: selectedBook}: Props){
       </Modal.Actions>
     </Modal>
   )
-}
+})
